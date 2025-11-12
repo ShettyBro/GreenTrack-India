@@ -1,0 +1,1 @@
+ packages installed are "npm install  bcryptjs crypto dotenv jsonwebtoken mssql multiparty node-fetch"
