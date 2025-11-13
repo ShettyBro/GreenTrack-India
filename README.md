@@ -308,8 +308,11 @@ MIT License - Feel free to use for your competition!
 
 ## 👤 Author
 
-**Your Name**  
-Built for Prompt to Product Competition 2025
+Sudeep J Shivashettar
+Monisha D
+Sangamesha Kumbara
+** Acharya Institute of Technology 
+Built for Prompt to Product Competition 2025 (Tech Habba)
 
 ---
 
