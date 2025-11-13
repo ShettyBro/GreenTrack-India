@@ -2,19 +2,19 @@
   functions = "functions"
   publish = "public"
 
-# Redirect /reset to /reset.html
-[[redirects]]
-  from = "/reset"
-  to = "/reset.html"
-  status = 200
-
 # Catch-all, but ignore reset.html
-[[redirects]]
-  from = "/"
-  to = "/index.html"
-  status = 200
 
 [[redirects]]
   from = "/index.html"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+[functions]
+  node_bundler = "esbuild"

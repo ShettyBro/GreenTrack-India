@@ -1,23 +1,26 @@
 {
-  "name": "prompt-to-product",
+  "name": "greentrack-india",
   "version": "1.0.0",
-  "description": "",
-  "main": "dbConfig.js",
+  "description": "AI-Powered Carbon Emission Tracking & Renewable Energy Platform",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "netlify dev",
+    "build": "echo 'No build needed for static site'",
+    "deploy": "netlify deploy --prod"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ShettyBro/Prompt-to-Product.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ShettyBro/Prompt-to-Product/issues"
-  },
-  "homepage": "https://github.com/ShettyBro/Prompt-to-Product#readme",
+  "keywords": [
+    "carbon-tracking",
+    "renewable-energy",
+    "sustainability",
+    "gemini-ai"
+  ],
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "bcryptjs": "^3.0.3",
     "crypto": "^1.0.1",
     "dotenv": "^17.2.3",
@@ -25,5 +28,14 @@
     "mssql": "^12.1.0",
     "multiparty": "^4.2.3",
     "node-fetch": "^3.3.2"
-  }
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  },
+  "author": "Sudeep and Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShettyBro/Prompt-to-Product/issues"
+  },
+  "homepage": "https://github.com/ShettyBro/Prompt-to-Product#readme"
 }
