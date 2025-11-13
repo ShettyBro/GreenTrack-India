@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GreenTrack India</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="dash-body">
+    <!-- Navigation -->
+    <nav class="dash-nav">
+        <div class="dash-nav-container">
+            <div class="dash-logo">
+                <span class="dash-logo-icon">🌱</span>
+                <span class="dash-logo-text">GreenTrack India</span>
+            </div>
+            <div class="dash-nav-links">
+                <a href="index.html" class="dash-nav-link">Home</a>
+                <a href="calculator.html" class="dash-nav-link">Calculator</a>
+                <a href="recommender.html" class="dash-nav-link">Recommender</a>
+                <a href="dashboard.html" class="dash-nav-link dash-nav-active">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <section class="dash-header">
+        <div class="dash-header-container">
+            <div class="dash-header-content">
+                <h1 class="dash-header-title">Your Carbon Dashboard</h1>
+                <p class="dash-header-subtitle">Real-time insights into your environmental impact</p>
+            </div>
+            <div class="dash-header-actions">
+                <button class="dash-btn-export" onclick="dashExportData()">
+                    <span class="dash-btn-icon">📥</span>
+                    Export Report
+                </button>
+                <button class="dash-btn-refresh" onclick="dashRefreshData()">
+                    <span class="dash-btn-icon">🔄</span>
+                    Refresh
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Dashboard -->
+    <main class="dash-main">
+        <div class="dash-container">
+            <!-- Stats Overview -->
+            <div class="dash-stats-grid">
+                <div class="dash-stat-card">
+                    <div class="dash-stat-icon dash-stat-icon-emission">📊</div>
+                    <div class="dash-stat-content">
+                        <div class="dash-stat-label">Total Emissions</div>
+                        <div class="dash-stat-value" id="dashTotalEmissions">0 kg</div>
+                        <div class="dash-stat-change dash-stat-decrease">-12% from last month</div>
+                    </div>
+                </div>
+
+                <div class="dash-stat-card">
+                    <div class="dash-stat-icon dash-stat-icon-trees">🌳</div>
+                    <div class="dash-stat-content">
+                        <div class="dash-stat-label">Trees Needed</div>
+                        <div class="dash-stat-value" id="dashTreesNeeded">0</div>
+                        <div class="dash-stat-change dash-stat-neutral">To offset emissions</div>
+                    </div>
+                </div>
+
+                <div class="dash-stat-card">
+                    <div class="dash-stat-icon dash-stat-icon-solar">☀️</div>
+                    <div class="dash-stat-content">
+                        <div class="dash-stat-label">Potential Savings</div>
+                        <div class="dash-stat-value" id="dashSavings">₹0</div>
+                        <div class="dash-stat-change dash-stat-increase">+18% with solar</div>
+                    </div>
+                </div>
+
+                <div class="dash-stat-card">
+                    <div class="dash-stat-icon dash-stat-icon-reduction">📉</div>
+                    <div class="dash-stat-content">
+                        <div class="dash-stat-label">Carbon Score</div>
+                        <div class="dash-stat-value" id="dashScore">0/100</div>
+                        <div class="dash-stat-change dash-stat-increase">+5 points this week</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="dash-charts-grid">
+                <!-- Emission Breakdown -->
+                <div class="dash-chart-card">
+                    <div class="dash-chart-header">
+                        <h3 class="dash-chart-title">Emission Breakdown</h3>
+                        <p class="dash-chart-subtitle">By source type</p>
+                    </div>
+                    <div class="dash-chart-body">
+                        <canvas id="dashPieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Monthly Trends -->
+                <div class="dash-chart-card">
+                    <div class="dash-chart-header">
+                        <h3 class="dash-chart-title">Monthly Trends</h3>
+                        <p class="dash-chart-subtitle">Last 6 months</p>
+                    </div>
+                    <div class="dash-chart-body">
+                        <canvas id="dashLineChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Savings Comparison -->
+                <div class="dash-chart-card">
+                    <div class="dash-chart-header">
+                        <h3 class="dash-chart-title">Renewable Savings</h3>
+                        <p class="dash-chart-subtitle">Projected vs Actual</p>
+                    </div>
+                    <div class="dash-chart-body">
+                        <canvas id="dashBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights Section -->
+            <div class="dash-insights-section">
+                <div class="dash-insights-header">
+                    <h2 class="dash-insights-title">
+                        <span class="dash-insights-icon">🤖</span>
+                        AI-Generated Insights
+                    </h2>
+                </div>
+                <div class="dash-insights-grid">
+                    <div class="dash-insight-card">
+                        <div class="dash-insight-badge dash-insight-badge-success">✓ Positive Trend</div>
+                        <h4 class="dash-insight-title">Great Progress!</h4>
+                        <p class="dash-insight-text">Your emissions decreased by 23% compared to last month. Keep up the good work!</p>
+                    </div>
+                    <div class="dash-insight-card">
+                        <div class="dash-insight-badge dash-insight-badge-warning">⚡ Opportunity</div>
+                        <h4 class="dash-insight-title">Solar Recommendation</h4>
+                        <p class="dash-insight-text">Based on your consumption, a 3kW solar system could reduce your carbon footprint by 45%.</p>
+                    </div>
+                    <div class="dash-insight-card">
+                        <div class="dash-insight-badge dash-insight-badge-info">📊 Analysis</div>
+                        <h4 class="dash-insight-title">Peak Usage Alert</h4>
+                        <p class="dash-insight-text">Your electricity usage peaks on weekends. Consider shifting loads to off-peak hours.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="dash-activity-section">
+                <h2 class="dash-activity-title">Recent Activities</h2>
+                <div class="dash-activity-list">
+                    <div class="dash-activity-item">
+                        <div class="dash-activity-icon">📊</div>
+                        <div class="dash-activity-content">
+                            <div class="dash-activity-name">Emission Calculated</div>
+                            <div class="dash-activity-details">450 kg CO₂ • 2 hours ago</div>
+                        </div>
+                        <div class="dash-activity-status dash-activity-status-complete">Complete</div>
+                    </div>
+                    <div class="dash-activity-item">
+                        <div class="dash-activity-icon">☀️</div>
+                        <div class="dash-activity-content">
+                            <div class="dash-activity-name">Solar Feasibility Check</div>
+                            <div class="dash-activity-details">Mumbai, 400001 • 5 hours ago</div>
+                        </div>
+                        <div class="dash-activity-status dash-activity-status-complete">Complete</div>
+                    </div>
+                    <div class="dash-activity-item">
+                        <div class="dash-activity-icon">📈</div>
+                        <div class="dash-activity-content">
+                            <div class="dash-activity-name">Report Generated</div>
+                            <div class="dash-activity-details">Monthly carbon report • 1 day ago</div>
+                        </div>
+                        <div class="dash-activity-status dash-activity-status-complete">Complete</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <script>
+        // Initialize Dashboard
+        dashInitCharts();
+        dashLoadData();
+    </script>
+</body>
+</html>

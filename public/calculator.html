@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Calculator - GreenTrack India</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="calc-body">
+    <!-- Navigation -->
+    <nav class="calc-nav">
+        <div class="calc-nav-container">
+            <div class="calc-logo">
+                <span class="calc-logo-icon">🌱</span>
+                <span class="calc-logo-text">GreenTrack India</span>
+            </div>
+            <div class="calc-nav-links">
+                <a href="index.html" class="calc-nav-link">Home</a>
+                <a href="calculator.html" class="calc-nav-link calc-nav-active">Calculator</a>
+                <a href="recommender.html" class="calc-nav-link">Recommender</a>
+                <a href="dashboard.html" class="calc-nav-link">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Calculator Hero -->
+    <section class="calc-hero">
+        <div class="calc-hero-container">
+            <div class="calc-hero-badge">
+                <span class="calc-badge-icon">🎯</span>
+                <span>AI-Powered Calculation</span>
+            </div>
+            <h1 class="calc-hero-title">Carbon Emission Calculator</h1>
+            <p class="calc-hero-subtitle">Calculate your monthly carbon footprint with precision and get personalized AI recommendations</p>
+        </div>
+    </section>
+
+    <!-- Calculator Form -->
+    <main class="calc-main">
+        <div class="calc-container">
+            <div class="calc-grid">
+                <!-- Input Form -->
+                <div class="calc-form-section">
+                    <div class="calc-form-card">
+                        <div class="calc-form-header">
+                            <h2 class="calc-form-title">Enter Your Monthly Data</h2>
+                            <p class="calc-form-subtitle">Provide accurate data for precise calculations</p>
+                        </div>
+
+                        <form id="calcForm" onsubmit="calcCalculateEmissions(event)">
+                            <!-- Electricity -->
+                            <div class="calc-input-group">
+                                <label class="calc-label">
+                                    <span class="calc-label-icon">⚡</span>
+                                    <span class="calc-label-text">Electricity Consumption</span>
+                                </label>
+                                <div class="calc-input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        id="calcElectricity" 
+                                        class="calc-input" 
+                                        placeholder="Enter kWh"
+                                        min="0"
+                                        step="0.01"
+                                        required
+                                    >
+                                    <span class="calc-input-unit">kWh</span>
+                                </div>
+                                <p class="calc-input-hint">Monthly electricity units from your bill</p>
+                            </div>
+
+                            <!-- LPG -->
+                            <div class="calc-input-group">
+                                <label class="calc-label">
+                                    <span class="calc-label-icon">🔥</span>
+                                    <span class="calc-label-text">LPG Consumption</span>
+                                </label>
+                                <div class="calc-input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        id="calcLpg" 
+                                        class="calc-input" 
+                                        placeholder="Enter kg"
+                                        min="0"
+                                        step="0.01"
+                                        required
+                                    >
+                                    <span class="calc-input-unit">kg</span>
+                                </div>
+                                <p class="calc-input-hint">Total LPG used (1 cylinder ≈ 14.2 kg)</p>
+                            </div>
+
+                            <!-- Diesel -->
+                            <div class="calc-input-group">
+                                <label class="calc-label">
+                                    <span class="calc-label-icon">⛽</span>
+                                    <span class="calc-label-text">Diesel Consumption</span>
+                                </label>
+                                <div class="calc-input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        id="calcDiesel" 
+                                        class="calc-input" 
+                                        placeholder="Enter litres"
+                                        min="0"
+                                        step="0.01"
+                                        required
+                                    >
+                                    <span class="calc-input-unit">L</span>
+                                </div>
+                                <p class="calc-input-hint">Diesel used in generators/vehicles</p>
+                            </div>
+
+                            <!-- Transport -->
+                            <div class="calc-input-group">
+                                <label class="calc-label">
+                                    <span class="calc-label-icon">🚗</span>
+                                    <span class="calc-label-text">Distance Travelled</span>
+                                </label>
+                                <div class="calc-input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        id="calcKm" 
+                                        class="calc-input" 
+                                        placeholder="Enter kilometers"
+                                        min="0"
+                                        step="0.01"
+                                        required
+                                    >
+                                    <span class="calc-input-unit">km</span>
+                                </div>
+                                <p class="calc-input-hint">Total distance by car/bike</p>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="calc-submit-btn">
+                                <span class="calc-btn-icon">🧮</span>
+                                Calculate Emissions
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Info Card -->
+                    <div class="calc-info-card">
+                        <div class="calc-info-icon">💡</div>
+                        <h3 class="calc-info-title">Why Calculate?</h3>
+                        <ul class="calc-info-list">
+                            <li>Track your environmental impact</li>
+                            <li>Get AI-powered reduction tips</li>
+                            <li>Compare with national averages</li>
+                            <li>Plan your green transition</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="calc-results-section">
+                    <div id="calcResults" class="calc-results-card" style="display: none;">
+                        <div class="calc-results-header">
+                            <h2 class="calc-results-title">Your Carbon Footprint</h2>
+                            <div class="calc-results-badge">Monthly Report</div>
+                        </div>
+
+                        <!-- Total Emissions -->
+                        <div class="calc-total-box">
+                            <div class="calc-total-label">Total CO₂ Emissions</div>
+                            <div class="calc-total-value">
+                                <span id="calcResultTotal">0</span>
+                                <span class="calc-total-unit">kg CO₂</span>
+                            </div>
+                            <div class="calc-total-trees">
+                                Equivalent to <span id="calcResultTrees">0</span> trees needed for offset
+                            </div>
+                        </div>
+
+                        <!-- Breakdown -->
+                        <div class="calc-breakdown">
+                            <h3 class="calc-breakdown-title">Emission Breakdown</h3>
+                            <div class="calc-breakdown-list">
+                                <div class="calc-breakdown-item">
+                                    <div class="calc-breakdown-header">
+                                        <span class="calc-breakdown-icon">⚡</span>
+                                        <span class="calc-breakdown-name">Electricity</span>
+                                    </div>
+                                    <div class="calc-breakdown-value">
+                                        <span id="calcResultElec">0</span> kg
+                                    </div>
+                                </div>
+                                <div class="calc-breakdown-item">
+                                    <div class="calc-breakdown-header">
+                                        <span class="calc-breakdown-icon">🔥</span>
+                                        <span class="calc-breakdown-name">LPG</span>
+                                    </div>
+                                    <div class="calc-breakdown-value">
+                                        <span id="calcResultLpg">0</span> kg
+                                    </div>
+                                </div>
+                                <div class="calc-breakdown-item">
+                                    <div class="calc-breakdown-header">
+                                        <span class="calc-breakdown-icon">⛽</span>
+                                        <span class="calc-breakdown-name">Diesel</span>
+                                    </div>
+                                    <div class="calc-breakdown-value">
+                                        <span id="calcResultDiesel">0</span> kg
+                                    </div>
+                                </div>
+                                <div class="calc-breakdown-item">
+                                    <div class="calc-breakdown-header">
+                                        <span class="calc-breakdown-icon">🚗</span>
+                                        <span class="calc-breakdown-name">Transport</span>
+                                    </div>
+                                    <div class="calc-breakdown-value">
+                                        <span id="calcResultTransport">0</span> kg
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Suggestion -->
+                        <div class="calc-ai-box">
+                            <div class="calc-ai-header">
+                                <span class="calc-ai-icon">🤖</span>
+                                <h3 class="calc-ai-title">AI-Powered Insights</h3>
+                            </div>
+                            <div id="calcAISuggestion" class="calc-ai-content">
+                                <!-- AI suggestions will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="calc-action-buttons">
+                            <a href="recommender.html" class="calc-action-btn calc-action-primary">
+                                <span>☀️</span>
+                                Get Solar Recommendations
+                            </a>
+                            <a href="dashboard.html" class="calc-action-btn calc-action-secondary">
+                                <span>📊</span>
+                                View Dashboard
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="calcEmptyState" class="calc-empty-state">
+                        <div class="calc-empty-icon">📊</div>
+                        <h3 class="calc-empty-title">Ready to Calculate?</h3>
+                        <p class="calc-empty-text">Fill in your monthly consumption data on the left to see your carbon footprint analysis and AI-powered recommendations.</p>
+                        <div class="calc-empty-features">
+                            <div class="calc-empty-feature">
+                                <span class="calc-empty-feature-icon">✓</span>
+                                <span>Instant calculations</span>
+                            </div>
+                            <div class="calc-empty-feature">
+                                <span class="calc-empty-feature-icon">✓</span>
+                                <span>AI recommendations</span>
+                            </div>
+                            <div class="calc-empty-feature">
+                                <span class="calc-empty-feature-icon">✓</span>
+                                <span>Detailed breakdown</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>

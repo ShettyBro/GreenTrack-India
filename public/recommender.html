@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Recommender - GreenTrack India</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="rec-body">
+    <!-- Navigation -->
+    <nav class="rec-nav">
+        <div class="rec-nav-container">
+            <div class="rec-logo">
+                <span class="rec-logo-icon">🌱</span>
+                <span class="rec-logo-text">GreenTrack India</span>
+            </div>
+            <div class="rec-nav-links">
+                <a href="index.html" class="rec-nav-link">Home</a>
+                <a href="calculator.html" class="rec-nav-link">Calculator</a>
+                <a href="recommender.html" class="rec-nav-link rec-nav-active">Recommender</a>
+                <a href="dashboard.html" class="rec-nav-link">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Recommender Hero -->
+    <section class="rec-hero">
+        <div class="rec-hero-container">
+            <div class="rec-hero-badge">
+                <span class="rec-badge-icon">☀️</span>
+                <span>AI-Powered Analysis</span>
+            </div>
+            <h1 class="rec-hero-title">Solar Feasibility Recommender</h1>
+            <p class="rec-hero-subtitle">Get personalized solar recommendations based on your location, roof space, and energy consumption</p>
+        </div>
+    </section>
+
+    <!-- Recommender Form -->
+    <main class="rec-main">
+        <div class="rec-container">
+            <div class="rec-layout">
+                <!-- Input Form -->
+                <div class="rec-form-section">
+                    <div class="rec-form-card">
+                        <div class="rec-form-header">
+                            <h2 class="rec-form-title">Enter Your Details</h2>
+                            <p class="rec-form-subtitle">Help us analyze your solar potential</p>
+                        </div>
+
+                        <form id="recForm" onsubmit="recGetRecommendation(event)">
+                            <!-- Pincode -->
+                            <div class="rec-input-group">
+                                <label class="rec-label">
+                                    <span class="rec-label-icon">📍</span>
+                                    <span class="rec-label-text">Location Pincode</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="recPincode" 
+                                    class="rec-input" 
+                                    placeholder="e.g., 400001"
+                                    pattern="[0-9]{6}"
+                                    required
+                                >
+                                <p class="rec-input-hint">6-digit Indian pincode for solar radiation data</p>
+                            </div>
+
+                            <!-- Roof Area -->
+                            <div class="rec-input-group">
+                                <label class="rec-label">
+                                    <span class="rec-label-icon">🏠</span>
+                                    <span class="rec-label-text">Available Roof Area</span>
+                                </label>
+                                <div class="rec-input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        id="recRoofArea" 
+                                        class="rec-input" 
+                                        placeholder="Enter area"
+                                        min="0"
+                                        step="0.01"
+                                        required
+                                    >
+                                    <span class="rec-input-unit">sq ft</span>
+                                </div>
+                                <p class="rec-input-hint">Usable flat roof area for solar panels</p>
+                            </div>
+
+                            <!-- Monthly Bill -->
+                            <div class="rec-input-group">
+                                <label class="rec-label">
+                                    <span class="rec-label-icon">💰</span>
+                                    <span class="rec-label-text">Monthly Electricity Bill</span>
+                                </label>
+                                <div class="rec-input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        id="recBill" 
+                                        class="rec-input" 
+                                        placeholder="Enter amount"
+                                        min="0"
+                                        step="0.01"
+                                        required
+                                    >
+                                    <span class="rec-input-unit">₹</span>
+                                </div>
+                                <p class="rec-input-hint">Average monthly electricity bill amount</p>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="rec-submit-btn">
+                                <span class="rec-btn-icon">🔍</span>
+                                Analyze Solar Feasibility
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Benefits Card -->
+                    <div class="rec-benefits-card">
+                        <h3 class="rec-benefits-title">Why Go Solar?</h3>
+                        <div class="rec-benefits-list">
+                            <div class="rec-benefit-item">
+                                <span class="rec-benefit-icon">💡</span>
+                                <div class="rec-benefit-content">
+                                    <div class="rec-benefit-name">Reduce Bills</div>
+                                    <div class="rec-benefit-desc">Save up to 70% on electricity</div>
+                                </div>
+                            </div>
+                            <div class="rec-benefit-item">
+                                <span class="rec-benefit-icon">🌍</span>
+                                <div class="rec-benefit-content">
+                                    <div class="rec-benefit-name">Cut Emissions</div>
+                                    <div class="rec-benefit-desc">Reduce your carbon footprint</div>
+                                </div>
+                            </div>
+                            <div class="rec-benefit-item">
+                                <span class="rec-benefit-icon">💰</span>
+                                <div class="rec-benefit-content">
+                                    <div class="rec-benefit-name">Earn ROI</div>
+                                    <div class="rec-benefit-desc">Payback in 3-5 years</div>
+                                </div>
+                            </div>
+                            <div class="rec-benefit-item">
+                                <span class="rec-benefit-icon">🎁</span>
+                                <div class="rec-benefit-content">
+                                    <div class="rec-benefit-name">Get Subsidies</div>
+                                    <div class="rec-benefit-desc">Government incentives available</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="rec-results-wrapper">
+                    <div id="recResults" class="rec-results-container" style="display: none;">
+                        <div class="rec-results-header">
+                            <h2 class="rec-results-title">Your Solar Recommendation</h2>
+                            <div class="rec-results-badge">AI-Analyzed</div>
+                        </div>
+
+                        <div id="recResultContent">
+                            <!-- Results will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="recEmptyState" class="rec-empty-state">
+                        <div class="rec-empty-icon">☀️</div>
+                        <h3 class="rec-empty-title">Discover Your Solar Potential</h3>
+                        <p class="rec-empty-text">Enter your location and energy details to receive a comprehensive AI-powered solar feasibility analysis tailored to your needs.</p>
+                        
+                        <div class="rec-empty-stats">
+                            <div class="rec-empty-stat">
+                                <div class="rec-empty-stat-value">300+</div>
+                                <div class="rec-empty-stat-label">Days of Sunshine</div>
+                            </div>
+                            <div class="rec-empty-stat">
+                                <div class="rec-empty-stat-value">5.5</div>
+                                <div class="rec-empty-stat-label">Peak Sun Hours</div>
+                            </div>
+                            <div class="rec-empty-stat">
+                                <div class="rec-empty-stat-value">60%</div>
+                                <div class="rec-empty-stat-label">Avg. Savings</div>
+                            </div>
+                        </div>
+
+                        <div class="rec-empty-info">
+                            <h4 class="rec-empty-info-title">What You'll Get:</h4>
+                            <ul class="rec-empty-info-list">
+                                <li>✓ Recommended system size</li>
+                                <li>✓ Expected energy generation</li>
+                                <li>✓ CO₂ reduction estimate</li>
+                                <li>✓ ROI and payback period</li>
+                                <li>✓ Feasibility score</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
