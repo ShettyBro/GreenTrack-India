@@ -182,18 +182,15 @@ function dashRefreshData() {
     btn.innerHTML = '<span class="dash-btn-icon">⏳</span> Loading...';
     btn.disabled = true;
 
-   dashLoadData().then(() => {
-    if (dashPieChart) dashPieChart.update();
-    if (dashLineChart) dashLineChart.update();
-    if (dashBarChart) dashBarChart.update();
-
-    // NEW: reload activities
-    dashLoadActivities();
-
-    btn.innerHTML = originalText;
-    btn.disabled = false;
-
-    alert('Dashboard refreshed successfully! ✓');
+    dashLoadData().then(() => {
+        if (dashPieChart) dashPieChart.update();
+        if (dashLineChart) dashLineChart.update();
+        if (dashBarChart) dashBarChart.update();
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        alert('Dashboard refreshed successfully! ✓');
     }).catch(() => {
         btn.innerHTML = originalText;
         btn.disabled = false;
@@ -432,108 +429,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('dashPieChart')) {
         dashInitCharts();
         dashLoadData();
-        dashLoadActivities(); // <-- new
     }
 });
-
-
-
-// ==============================
-// Activity feed functions
-// ==============================
-
-async function dashLoadActivities() {
-    const container = document.getElementById('dashActivityList');
-    if (!container) return;
-
-    container.innerHTML = '<div class="dash-activity-empty">Loading recent activities...</div>';
-
-    try {
-        const resp = await fetch('https://greentrack-india.netlify.app/.netlify/functions/saveToDB?action=activities');
-        if (!resp.ok) throw new Error('Activities API failed');
-
-        const json = await resp.json();
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-            container.innerHTML = '';
-            json.data.forEach(item => {
-                const node = renderActivityItem(item);
-                container.appendChild(node);
-            });
-        } else {
-            container.innerHTML = '<div class="dash-activity-empty">No recent activities yet.</div>';
-        }
-    } catch (err) {
-        console.error('Failed to load activities:', err);
-        container.innerHTML = '<div class="dash-activity-empty">Unable to fetch activities.</div>';
-    }
-}
-
-// Helper to create activity DOM node
-function renderActivityItem(item) {
-    // create container
-    const wrapper = document.createElement('div');
-    wrapper.className = 'dash-activity-item';
-
-    // icon based on type
-    let icon = '📊';
-    if (item.type === 'solar') icon = '☀️';
-    if (item.type === 'report') icon = '📈';
-    if (item.type === 'emission') icon = '📊';
-
-    // title & details
-    const iconDiv = document.createElement('div');
-    iconDiv.className = 'dash-activity-icon';
-    iconDiv.textContent = icon;
-
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'dash-activity-content';
-
-    const titleEl = document.createElement('div');
-    titleEl.className = 'dash-activity-name';
-    titleEl.textContent = item.title || (item.type || 'Activity');
-
-    const detailsEl = document.createElement('div');
-    detailsEl.className = 'dash-activity-details';
-    // Use details field or derive from metadata
-    if (item.details) {
-        detailsEl.textContent = `${item.details} • ${timeSince(new Date(item.created_at))}`;
-    } else {
-        detailsEl.textContent = `${timeSince(new Date(item.created_at))}`;
-    }
-
-    contentDiv.appendChild(titleEl);
-    contentDiv.appendChild(detailsEl);
-
-    const statusDiv = document.createElement('div');
-    statusDiv.className = 'dash-activity-status dash-activity-status-complete';
-    statusDiv.textContent = 'Complete';
-
-    wrapper.appendChild(iconDiv);
-    wrapper.appendChild(contentDiv);
-    wrapper.appendChild(statusDiv);
-
-    return wrapper;
-}
-
-// Small helper to convert date -> "2 hours ago"
-function timeSince(date) {
-    const seconds = Math.floor((new Date() - date) / 1000);
-
-    let interval = Math.floor(seconds / 31536000);
-    if (interval >= 1) return interval + " year" + (interval > 1 ? "s" : "") + " ago";
-    interval = Math.floor(seconds / 2592000);
-    if (interval >= 1) return interval + " month" + (interval > 1 ? "s" : "") + " ago";
-    interval = Math.floor(seconds / 86400);
-    if (interval >= 1) return interval + " day" + (interval > 1 ? "s" : "") + " ago";
-    interval = Math.floor(seconds / 3600);
-    if (interval >= 1) return interval + " hour" + (interval > 1 ? "s" : "") + " ago";
-    interval = Math.floor(seconds / 60);
-    if (interval >= 1) return interval + " minute" + (interval > 1 ? "s" : "") + " ago";
-    return Math.floor(seconds) + " seconds ago";
-}
-
-// Integrate into existing refresh flow:
-// In dashRefreshData(), after dashLoadData() finishes, call dashLoadActivities()
-// Update dashRefreshData to call dashLoadActivities() — if you prefer, call both on init.
-
-

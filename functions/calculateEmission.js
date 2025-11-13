@@ -1,8 +1,7 @@
-// calculateEmission.js (UPDATED)
 const sql = require('mssql');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// DB config (same as before)
+// Database config
 const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -18,6 +17,7 @@ const dbConfig = {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 exports.handler = async (event, context) => {
+    // CORS headers
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -25,11 +25,18 @@ exports.handler = async (event, context) => {
         'Content-Type': 'application/json'
     };
 
+    // Handle OPTIONS request
     if (event.httpMethod === 'OPTIONS') {
         return { statusCode: 200, headers, body: '' };
     }
+
+    // Only allow POST
     if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
+        return {
+            statusCode: 405,
+            headers,
+            body: JSON.stringify({ error: 'Method not allowed' })
+        };
     }
 
     try {
@@ -58,48 +65,33 @@ exports.handler = async (event, context) => {
         let aiSuggestion = '';
         try {
             const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+            
             const prompt = `Analyze this carbon footprint data and provide a concise 2-3 sentence recommendation:
-- Total CO2: ${total.toFixed(2)} kg/month
-- Electricity: ${emissions.electricity.toFixed(2)} kg
-- LPG: ${emissions.lpg.toFixed(2)} kg
-- Diesel: ${emissions.diesel.toFixed(2)} kg
-- Transport: ${emissions.transport.toFixed(2)} kg
+            - Total CO2: ${total.toFixed(2)} kg/month
+            - Electricity: ${emissions.electricity.toFixed(2)} kg
+            - LPG: ${emissions.lpg.toFixed(2)} kg
+            - Diesel: ${emissions.diesel.toFixed(2)} kg
+            - Transport: ${emissions.transport.toFixed(2)} kg
+            
+            Provide actionable advice on reducing emissions, focusing on the highest emission source.`;
 
-Provide actionable advice on reducing emissions, focusing on the highest emission source.`;
             const result = await model.generateContent(prompt);
             const response = await result.response;
             aiSuggestion = response.text();
         } catch (aiError) {
             console.error('AI generation error:', aiError);
+            // Fallback suggestion
             const maxSource = Object.entries(emissions).reduce((a, b) => a[1] > b[1] ? a : b);
             aiSuggestion = `Your monthly footprint is ${total.toFixed(2)} kg CO₂. Focus on reducing ${maxSource[0]} emissions (${maxSource[1].toFixed(2)} kg) for maximum impact. Consider renewable energy alternatives.`;
         }
 
-        // Save to Azure SQL (EmissionLogs + ActivityLog)
+        // Save to Azure SQL
         try {
             await sql.connect(dbConfig);
-
-            // Insert into EmissionLogs
-            const insertEmission = await sql.query`
-                INSERT INTO EmissionLogs (electricity, lpg, diesel, km, total_emission, ai_suggestion)
-                VALUES (${electricity || 0}, ${lpg || 0}, ${diesel || 0}, ${km || 0}, ${total}, ${aiSuggestion});
-            `;
-
-            // Insert ActivityLog entry
-            const activityTitle = 'Emission Calculated';
-            const activityDetails = `${total.toFixed(2)} kg CO₂`;
-            const metadata = JSON.stringify({
-                electricity: emissions.electricity.toFixed(2),
-                lpg: emissions.lpg.toFixed(2),
-                diesel: emissions.diesel.toFixed(2),
-                transport: emissions.transport.toFixed(2)
-            });
-
             await sql.query`
-                INSERT INTO ActivityLog (type, title, details, metadata)
-                VALUES ('emission', ${activityTitle}, ${activityDetails}, ${metadata});
+                INSERT INTO EmissionLogs (electricity, lpg, diesel, km, total_emission, ai_suggestion)
+                VALUES (${electricity || 0}, ${lpg || 0}, ${diesel || 0}, ${km || 0}, ${total}, ${aiSuggestion})
             `;
-
             await sql.close();
         } catch (dbError) {
             console.error('Database error:', dbError);
