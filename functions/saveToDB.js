@@ -1,3 +1,4 @@
+// saveToDB.js (UPDATED)
 const sql = require('mssql');
 
 // Database config
@@ -29,7 +30,7 @@ exports.handler = async (event, context) => {
     try {
         await sql.connect(dbConfig);
 
-        // GET - Fetch latest record
+        // GET - Fetch latest record or top 10
         if (event.httpMethod === 'GET') {
             const action = event.queryStringParameters?.action || 'latest';
 
@@ -72,10 +73,25 @@ exports.handler = async (event, context) => {
                         data: result.recordset
                     })
                 };
+            } else if (action === 'activities' || action === 'allActivities') {
+                // Return latest 10 activity logs
+                const result = await sql.query`
+                    SELECT TOP 10 id, type, title, details, metadata, created_at 
+                    FROM ActivityLog
+                    ORDER BY created_at DESC
+                `;
+                return {
+                    statusCode: 200,
+                    headers,
+                    body: JSON.stringify({
+                        success: true,
+                        data: result.recordset
+                    })
+                };
             }
         }
 
-        // POST - Save new record
+        // POST - Save new emission record (existing behavior)
         if (event.httpMethod === 'POST') {
             const { electricity, lpg, diesel, km, total_emission, ai_suggestion } = JSON.parse(event.body);
 
