@@ -144,7 +144,7 @@ function dashInitCharts() {
 // Load dashboard data from API
 async function dashLoadData() {
     try {
-        const response = await fetch('/.netlify/functions/saveToDB?action=latest');
+        const response = await fetch('https://greentrack-india.netlify.app/.netlify/functions/saveToDB?action=latest');
         
         if (response.ok) {
             const data = await response.json();
@@ -239,7 +239,7 @@ async function calcCalculateEmissions(event) {
     
     try {
         // Call Netlify Function
-        const response = await fetch('/.netlify/functions/calculateEmission', {
+        const response = await fetch('https://greentrack-india.netlify.app/.netlify/functions/calculateEmission', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ electricity, lpg, diesel, km })
@@ -339,7 +339,7 @@ async function recGetRecommendation(event) {
     
     try {
         // Call Netlify Function
-        const response = await fetch('/.netlify/functions/getRecommendations', {
+        const response = await fetch('https://greentrack-india.netlify.app/.netlify/functions/getRecommendations', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pincode, roofArea, monthlyBill })
