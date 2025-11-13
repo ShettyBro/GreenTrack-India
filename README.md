@@ -317,11 +317,14 @@ Built for Prompt to Product Competition 2025 (Tech Habba)
 
 ## 🙏 Acknowledgments
 
-- Chart.js for beautiful visualizations
 - Google Gemini for AI insights
 - Netlify for seamless deployment
 - Azure for reliable database hosting
 
 ---
-
+## Ai Tooles USED 
+- ChatGPT    
+- Claude AI
+- Gama Ai
+---
 **⭐ Star this repo if you find it useful!**
