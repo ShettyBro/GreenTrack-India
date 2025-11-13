@@ -25,7 +25,6 @@ Built for the **Prompt to Product Competition** | Deployment-ready in 2 hours
 | **Backend** | Node.js (Netlify Functions) |
 | **Database** | Azure SQL Database |
 | **AI Engine** | Google Gemini API |
-| **Charts** | Chart.js |
 | **Hosting** | Netlify |
 
 ---
